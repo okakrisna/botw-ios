@@ -1,0 +1,63 @@
+name: Build Zelda BotW iOS IPA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build Native iOS App
+    runs-on: macos-14
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Build Tools & Python Dependencies
+        run: |
+          brew install xcodegen zstd spirv-cross
+          python3 -m pip install lz4 capstone fonttools zbic nsz "backports.zstd; python_version < '3.14'"
+
+      - name: Clone nxnative Engine
+        run: |
+          git clone --depth 1 https://github.com/seedds/nxnative.git nxnative
+
+      - name: Prepare Workspace Structure
+        run: |
+          mkdir -p work/build work/data/v1114112
+          cp -r patched work/build/patched_v1114112
+          mkdir -p work/build/ios/dmsh_b
+          # Create placeholder RomFS marker and control file for build validation
+          mkdir -p work/data/v1114112/RomFS/Pack
+          touch work/data/v1114112/RomFS/Pack/Bootup_Graphics.pack
+          touch work/data/v1114112/control.nacp
+
+      - name: Compile Metal Shaders
+        run: |
+          cd nxnative
+          export DM_GAME=01007EF00011E000
+          export DMSH_TARGETS=ios
+          export IOSOUT="$GITHUB_WORKSPACE/work/build/ios/dmsh_b"
+          python3 dm/gfx/tools/dmsh_build.py "$GITHUB_WORKSPACE/shader_pkg" "$GITHUB_WORKSPACE/work/build/shader_cache"
+
+      - name: Build Slim IPA
+        run: |
+          cd nxnative
+          export GAME=01007EF00011E000
+          export W="$GITHUB_WORKSPACE/work"
+          export PATCHED="$GITHUB_WORKSPACE/work/build/patched_v1114112"
+          export ROMFS="$GITHUB_WORKSPACE/work/data/v1114112/RomFS"
+          export MSL_IOS="$GITHUB_WORKSPACE/work/build/ios/dmsh_b"
+          export DM_COPY_ROMFS=NO
+          export DM_DISPLAY_NAME="The Legend of Zelda: Breath of the Wild"
+          export DM_APP_VERSION="1.9.0"
+          export DM_BUNDLE_ID="org.nxnative.01007ef00011e000"
+          export DM_ENTITLEMENTS=""
+          bash dm/ios/tools/build_ipa.sh "$GITHUB_WORKSPACE/ZeldaBreathOfTheWild.ipa"
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZeldaBreathOfTheWild-iOS-IPA
+          path: ZeldaBreathOfTheWild.ipa
+          if-no-files-found: error

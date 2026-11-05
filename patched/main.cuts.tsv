@@ -1,0 +1,51 @@
+# BUILD_ID	cd57b23fa4bbad65803d9788c01821ee
+0x112670c	6041201e	4041201e	lower bound of the candidate interval: fmov s0,s11 (2.0) → fmov s0,s10 (1.0)
+0x1126710	7f0b0071	7f070071	lower bound of the candidate interval: cmp w27,#2 → cmp w27,#1
+0x112665c	78008052	58008052	step-down target recorded when stepping up, max(candidate, w24) − 1: mov w24,#3 → mov w24,#2
+0x1126748	1f0d0071	1f090071	step-down target recorded when stepping up: cmp w8,#3 → cmp w8,#2
+0x1126794	3f0d0071	3f090071	stepping down stops at < 3 → at < 2: cmp w9,#3 → cmp w9,#2
+0x112691c	c00000b4	03000014	interval controller always takes the GPU time path (CPU span timing): cbz x0,#0x1126934 → b #0x1126928
+0x1126974	c00000b4	03000014	interval controller always takes the GPU time path (takes max(CPU span, GPU time)): cbz x0,#0x112698c → b #0x1126980
+0x11269b8	fd7bbea9	37dc3714	setWaitVsyncInterval: the host's step unless the VFR override is set (state page target fps; 0 = the game's interval)
+0x151d3d0	fd7bbea9	c1012814	VFR::updateInterval: its own override published for the host (state page target fps; 0 = original)
+0xeb0f88	080140bd	dcb24114	held-button counts step by the VFR ratio (menu repeat in game time at any frame step)
+0x1266880	88ae40f9	a7dc3214	3D view scale = the host render scale (1.0 = the game's dynamic resolution)
+0x126686c	39000014	b6dc3214	scale apply block taken every frame when the host render scale is not 1.0
+0xc61ef4	0987c0f2	1bef4a14	output size static, nnMain: 1920x1080 → the host's height
+0xc61f28	0987c0f2	14ef4a14	output size static, nnMain (second path)
+0x12618c4	0987c0f2	b3f03214	output size static, its getter
+0xc61f5c	085ac0f2	13ef4a14	layout size static, nnMain: 1280x720 → the host's layout height
+0x1261920	095ac0f2	a8f03214	layout size static, its getter
+0x12660d4	0887c0f2	c1de3214	docked display size 1920x1080
+0x12660f0	04878052	c0de3214	docked viewport height 1080
+0x1266124	085ac0f2	b9de3214	handheld display size 1280x720
+0x1266188	045a8052	a6de3214	handheld viewport height 720
+0x1266134	8986a852	c1de3214	scaled display height 720.0
+0xdf19ac	8886a852	a9b04414	720.0: output size / layout size (the layout scale)
+0xde85dc	8986a852	a6d54414	720.0 with 1280.0 (screen position in layout space)
+0xdea070	8886a852	0acf4414	720.0 with 1280.0 (screen position / layout size)
+0xdea678	8886a852	91cd4414	720.0 with 1280.0
+0xe27b44	9786a852	67d84314	720.0 stored with 1280.0
+0xf6e798	8986a852	5bbd3e14	720.0 with 1280.0 (screen position)
+0x100817c	8886a852	eb563c14	720.0 with 1280.0 passed as a layout size
+0x1544644	8886a852	c2652714	720.0 with 1280.0
+0x1059730	085ac0f2	90113b14	1280x720 layout size of an object
+0x106bb6c	085ac0f2	8ac83a14	1280x720 default sizes of a layer
+0x13f9704	085ac0f2	ad912c14	1280x720 passed as a size
+0xef1388	0a5ac0f2	95b24014	1280x720 in a descriptor
+0xeb48b8	0041201e	52a54114	sead::PerspectiveProjection fovy widened for a view of the screen's ratio (more above and below, 16:9 sides), stored widened
+0xeb4968	0041201e	4aa54114	sead::PerspectiveProjection fovy widened for a view of the screen's ratio (more above and below, 16:9 sides), stored widened
+0xeb49d0	2041201e	54a54114	sead::PerspectiveProjection fovy widened for a view of the screen's ratio (more above and below, 16:9 sides), stored widened
+0x10ee094	007440bd	c7bf3814	main camera fovy getter: widened like the projection (culling tests)
+0x10ee0cc	007440bd	cabf3814	main camera fovy getter in degrees: widened like the projection
+0xeb4a50	0188552d	7ba54114	PerspectiveProjection matrix: the HUD camera (16:9, near 1, far 10000) takes the screen's ratio and a widened vertical angle
+0x27ae0	68624139	1ae37b14	Pane::Calculate: a HUD widget at the edge moved to the taller screen's edge with its children, full-screen backgrounds stretched (duo_anchor.c)
+0xf5a0dc	2211452d	ab193f14	capture: the screen's layout height instead of the layout file's 720 (texture size, copied rect)
+0xf5a4b8	6006452d	be183f14	capture: the screen's layout height instead of the layout file's 720 (texture size, copied rect)
+0xf66118	812f40bd	b0e93e14	capture: the screen's layout height instead of the layout file's 720 (texture size, copied rect)
+0xf66334	8007452d	33e93e14	capture: the screen's layout height instead of the layout file's 720 (texture size, copied rect)
+0xf60cc0	08604139	dafe3e14	capture pane Calculate: a full-screen capture made as tall as the screen (duo_anchor.c)
+0xf59b2c	086c4339	4d1b3f14	capture pane Calculate: a full-screen capture made as tall as the screen (duo_anchor.c)
+0x127a2f8	2108221e	68993214	map footprint trail: its viewport and projection at the 720 pane's half-height, not the taller frame's
+0x2df28	0305452d	61ca7b14	projected texture fitted to the layout: a pane as tall as the taller screen maps its whole height
+0xf75ba4	9489fd97	54ab3e94	screen copy into a 16:9 picture (camera photo): the screen's middle 16:9 band, not the whole taller screen squashed into it
